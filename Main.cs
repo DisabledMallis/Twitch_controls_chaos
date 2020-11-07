@@ -66,7 +66,11 @@ namespace twitchcontrols
             "delete all bloons on screen",
             "all bloons are camgrow fortified for 60s",
             "bloons randomly upgrade or take no dmg (30s)",
-            "reset lives"
+            "reset lives",
+            "new towers turn to cave monkeys (40s)",
+            "new towers turn to cold sentries (40s)",
+            "new towers turn to energising totems (20s)",
+            "new towers turn to portable lakes (20s)"
         };
         public static int prevChat = 0;
 
@@ -109,6 +113,7 @@ namespace twitchcontrols
             {
                 Logger.Log("get in a game to start the chaos mod");
                 prevEffect = "none";
+                options[0] = "nothing";
                 voteTimer = voteTimerMax;
             }
 
@@ -144,7 +149,7 @@ namespace twitchcontrols
 
             if (getChatTimer > 0.3)
             {
-                
+
                 try
                 {
                     chat = System.IO.File.ReadAllLines(chatFile);
@@ -294,7 +299,7 @@ namespace twitchcontrols
                         {
                             foreach (var t in InGame.instance.bridge.GetAllTowers())
                             {
-                                string[] valid = new string[] { 
+                                string[] valid = new string[] {
                                     "Dart",
                                     "Boomerang",
                                     "BombShooter",
@@ -337,6 +342,9 @@ namespace twitchcontrols
                         {
                             InGame.instance.bridge.ResetHealth();
                         }
+                        //effects 20 to 23 change towers
+
+
                         if (prevEffect == "Spawn Ceramic")
                         {
                             Il2CppReferenceArray<BloonEmissionModel> bme = new Il2CppReferenceArray<BloonEmissionModel>(1);
@@ -420,19 +428,19 @@ namespace twitchcontrols
 
             //if (key == "Alpha5")
             //{
-            //    options[0] = effects[14];
+            //    options[0] = effects[20];
             //}
             //if (key == "Alpha6")
             //{
-            //    options[0] = effects[15];
+            //    options[0] = effects[21];
             //}
             //if (key == "Alpha7")
             //{
-            //    options[0] = effects[16];
+            //    options[0] = effects[22];
             //}
             //if (key == "Alpha8")
             //{
-            //    options[0] = effects[17];
+            //    options[0] = effects[23];
             //}
             //if (key == "Alpha9")
             //{
@@ -487,7 +495,31 @@ namespace twitchcontrols
 
         }
 
+        [HarmonyPatch(typeof(Tower), "Initialise")]
+        public class TowerInitialise_Patch
+        {
 
+            [HarmonyPrefix]
+            public static bool Prefix(Tower __instance, ref Model modelToUse)
+            {
+
+                if (prevEffect == effects[20] && voteTimer < 40)
+                    modelToUse = TowerUtils.GetTower(TowerType.CaveMonkey);
+
+                if (prevEffect == effects[21] && voteTimer < 40)
+                    modelToUse = TowerUtils.GetTower(TowerType.SentryCold);
+
+                if (prevEffect == effects[22] && voteTimer < 20)
+                    modelToUse = TowerUtils.GetTower(TowerType.EnergisingTotem);
+
+                if (prevEffect == effects[23] && voteTimer < 20)
+                    modelToUse = TowerUtils.GetTower(TowerType.PortableLake);
+
+
+
+                return true;
+            }
+        }
 
     }
 
