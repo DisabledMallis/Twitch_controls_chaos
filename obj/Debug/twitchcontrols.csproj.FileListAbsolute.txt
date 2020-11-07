@@ -8,3 +8,8 @@ C:\Users\Timothe\Desktop\twitchcontrols\twitchcontrols.dll.config
 C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.dll.config
 C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.dll
 C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.pdb
+C:\Users\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.dll.config
+C:\Users\Timothe\Documents\GitHub\Twitch_controls_chaos\obj\Debug\twitchcontrols.csprojAssemblyReference.cache
+C:\Users\Timothe\Documents\GitHub\Twitch_controls_chaos\obj\Debug\twitchcontrols.csproj.CoreCompileInputs.cache
+C:\Users\Timothe\Documents\GitHub\Twitch_controls_chaos\obj\Debug\twitchcontrols.dll
+C:\Users\Timothe\Documents\GitHub\Twitch_controls_chaos\obj\Debug\twitchcontrols.pdb

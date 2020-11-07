@@ -416,37 +416,37 @@ namespace twitchcontrols
 
             string key = e.key + "";
 
-            if (key == "Alpha5")
-            {
-                options[0] = effects[14];
-            }
-            if (key == "Alpha6")
-            {
-                options[0] = effects[15];
-            }
-            if (key == "Alpha7")
-            {
-                options[0] = effects[16];
-            }
-            if (key == "Alpha8")
-            {
-                options[0] = effects[17];
-            }
-            if (key == "Alpha9")
-            {
-                options[0] = effects[18];
-            }
-            if (key == "Alpha0")
-            {
-                options[0] = effects[19];
-            }
+            //if (key == "Alpha5")
+            //{
+            //    options[0] = effects[14];
+            //}
+            //if (key == "Alpha6")
+            //{
+            //    options[0] = effects[15];
+            //}
+            //if (key == "Alpha7")
+            //{
+            //    options[0] = effects[16];
+            //}
+            //if (key == "Alpha8")
+            //{
+            //    options[0] = effects[17];
+            //}
+            //if (key == "Alpha9")
+            //{
+            //    options[0] = effects[18];
+            //}
+            //if (key == "Alpha0")
+            //{
+            //    options[0] = effects[19];
+            //}
 
         }
 
         [HarmonyPatch(typeof(Bloon), "Initialise")]
         public class BloonInitialise_Patch
         {
-            // Token: 0x06000003 RID: 3 RVA: 0x0000206C File Offset: 0x0000026C
+
             [HarmonyPrefix]
             public static bool Prefix(Bloon __instance, ref Model modelToUse)
             {
@@ -464,7 +464,6 @@ namespace twitchcontrols
                 return true;
             }
 
-            // Token: 0x06000004 RID: 4 RVA: 0x00002100 File Offset: 0x00000300
             public static BloonModel GetNextBloon(string currentBloon)
             {
                 var allBloonTypes = BloonUtils.GetAllBloonTypes();
