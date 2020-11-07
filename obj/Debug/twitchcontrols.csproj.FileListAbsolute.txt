@@ -1,0 +1,10 @@
+C:\Users\Timothe\Desktop\twitchcontrols\obj\Debug\twitchcontrols.csprojAssemblyReference.cache
+C:\Users\Timothe\Desktop\twitchcontrols\obj\Debug\twitchcontrols.csproj.CoreCompileInputs.cache
+C:\Users\Timothe\Desktop\twitchcontrols\obj\Debug\twitchcontrols.dll
+C:\Users\Timothe\Desktop\twitchcontrols\obj\Debug\twitchcontrols.pdb
+C:\Users\Timothe\Desktop\twitchcontrols\twitchcontrols.dll
+C:\Users\Timothe\Desktop\twitchcontrols\twitchcontrols.pdb
+C:\Users\Timothe\Desktop\twitchcontrols\twitchcontrols.dll.config
+C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.dll.config
+C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.dll
+C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\Mods\twitchcontrols.pdb
