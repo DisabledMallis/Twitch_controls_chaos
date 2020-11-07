@@ -80,6 +80,8 @@ namespace twitchcontrols
         public static System.Random random = new System.Random();
         static string chatFile = @"C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\twitchchat.txt";
 
+        string[] chat = { "" };
+
         public override void OnApplicationStart()
         {
             base.OnApplicationStart();
@@ -142,7 +144,7 @@ namespace twitchcontrols
 
             if (getChatTimer > 0.3)
             {
-                string[] chat = { "" };
+                
                 try
                 {
                     chat = System.IO.File.ReadAllLines(chatFile);
