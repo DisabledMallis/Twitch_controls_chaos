@@ -1,4 +1,4 @@
-# Twitch_controls_chaos
+# Singleplayer
 
 to install the mod: 
 download these files:
@@ -12,6 +12,6 @@ put nkhook6.dll in a folder called "Mods" in the game's directory, then copy the
 
 
 
-# for streamers
+# For streamers
 you will need to use this: https://github.com/Timotheeee/read_twitch_chat/tree/main/TwitchLibTest
 and get a token from https://twitchapps.com/tmi/
