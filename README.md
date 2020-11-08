@@ -15,3 +15,4 @@ put nkhook6.dll in a folder called "Mods" in the game's directory, then copy twi
 # For streamers
 you will need to use this: https://github.com/Timotheeee/read_twitch_chat/tree/main/TwitchLibTest
 and get a token from https://twitchapps.com/tmi/
+then press 0 once in game to activate twitch mode
