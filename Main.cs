@@ -258,7 +258,7 @@ namespace twitchcontrols
                             var models = InGame.instance.bridge.Model.bloons;
                             foreach (var model in models)
                             {
-                                model.Speed = (((float)random.NextDouble()) * 100) + 40;
+                                model.Speed = (((float)random.NextDouble()) * 95) + 40;
                             }
                         }
                         //3x speed
