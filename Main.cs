@@ -86,6 +86,8 @@ namespace twitchcontrols
 
         string[] chat = { "" };
 
+        static bool twitchMode = false;
+
         public override void OnApplicationStart()
         {
             base.OnApplicationStart();
@@ -149,15 +151,15 @@ namespace twitchcontrols
 
             if (getChatTimer > 0.3)
             {
+                if (twitchMode)
+                    try
+                    {
+                        chat = System.IO.File.ReadAllLines(chatFile);
+                    }
+                    catch
+                    {
 
-                try
-                {
-                    chat = System.IO.File.ReadAllLines(chatFile);
-                }
-                catch
-                {
-
-                }
+                    }
 
                 for (var i = prevChat; i < chat.Length; i++)
                 {
@@ -258,7 +260,8 @@ namespace twitchcontrols
                             var models = InGame.instance.bridge.Model.bloons;
                             foreach (var model in models)
                             {
-                                model.Speed = (((float)random.NextDouble()) * 95) + 40;
+                                if (model.baseId != "Bfb" && model.baseId != "Zomg" && model.baseId != "Ddt" && model.baseId != "Bad")
+                                    model.Speed = (((float)random.NextDouble()) * 95) + 40;
                             }
                         }
                         //3x speed
@@ -369,6 +372,18 @@ namespace twitchcontrols
                             bme[0] = (new BloonEmissionModel("Zomg", 1, "Zomg"));
                             InGame.instance.bridge.SpawnBloons(bme, 80, 0);
                         }
+                        if (prevEffect == "Spawn DDT")
+                        {
+                            Il2CppReferenceArray<BloonEmissionModel> bme = new Il2CppReferenceArray<BloonEmissionModel>(1);
+                            bme[0] = (new BloonEmissionModel("Ddt", 1, "Ddt"));
+                            InGame.instance.bridge.SpawnBloons(bme, 90, 0);
+                        }
+                        if (prevEffect == "Spawn BAD")
+                        {
+                            Il2CppReferenceArray<BloonEmissionModel> bme = new Il2CppReferenceArray<BloonEmissionModel>(1);
+                            bme[0] = (new BloonEmissionModel("Bad", 1, "Bad"));
+                            InGame.instance.bridge.SpawnBloons(bme, 100, 0);
+                        }
                     }
                     catch
                     {
@@ -386,12 +401,16 @@ namespace twitchcontrols
                     int round = InGame.instance.bridge.GetCurrentRound();
                     if (round > 10 && round < 40)
                         tempEffects.Add("Spawn Ceramic");
-                    if (round > 20)
+                    if (round > 30)
                         tempEffects.Add("Spawn MOAB");
-                    if (round > 40)
+                    if (round > 45)
                         tempEffects.Add("Spawn BFB");
-                    if (round > 60)
+                    if (round > 65)
                         tempEffects.Add("Spawn ZOMG");
+                    if (round > 85)
+                        tempEffects.Add("Spawn DDT");
+                    if (round > 94)
+                        tempEffects.Add("Spawn BAD");
 
                     string[] r = tempEffects.OrderBy(x => random.Next()).ToArray();
                     options[0] = r[0];
@@ -399,13 +418,23 @@ namespace twitchcontrols
                     options[2] = r[2];
                 }
 
+                if (twitchMode)
+                {
+                    Logger.Log(" \n \n \n  \n  \n  \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n ");
+                    Logger.Log("Last effect: " + prevEffect);
+                    Logger.Log("Option 1: " + options[0] + " (" + votes[0] + " votes)");
+                    Logger.Log("Option 2: " + options[1] + " (" + votes[1] + " votes)");
+                    Logger.Log("Option 3: " + options[2] + " (" + votes[2] + " votes)");
+                    Logger.Log("seconds left to vote: " + (voteTimerMax - voteTimer));
+                }
+                else
+                {
+                    Logger.Log(" \n \n \n  \n  \n  \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n ");
+                    Logger.Log("Last effect: " + prevEffect);
+                    Logger.Log("Next effect: " + options[0]);
+                    Logger.Log("Timer: " + (voteTimerMax - voteTimer));
+                }
 
-                Logger.Log(" \n \n \n  \n  \n  \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n   \n  \n  \n  \n  \n  \n  \n ");
-                Logger.Log("Last effect: " + prevEffect);
-                Logger.Log("Option 1: " + options[0] + " (" + votes[0] + " votes)");
-                Logger.Log("Option 2: " + options[1] + " (" + votes[1] + " votes)");
-                Logger.Log("Option 3: " + options[2] + " (" + votes[2] + " votes)");
-                Logger.Log("seconds left to vote: " + (voteTimerMax - voteTimer));
 
 
                 getChatTimer = 0;
@@ -440,16 +469,17 @@ namespace twitchcontrols
             //}
             //if (key == "Alpha8")
             //{
-            //    options[0] = effects[23];
+            //    options[0] = "Spawn DDT";
             //}
             //if (key == "Alpha9")
             //{
-            //    options[0] = effects[18];
+            //    options[0] = "Spawn BAD";
             //}
-            //if (key == "Alpha0")
-            //{
-            //    options[0] = effects[18];
-            //}
+            if (key == "Alpha0")
+            {
+                twitchMode = true;
+                Logger.Log("Twitch mode activated");
+            }
 
         }
 
@@ -481,7 +511,7 @@ namespace twitchcontrols
                 int num1 = random.Next(0, 5);
                 int num2 = num1 == 0 ? 0 : 1;
                 int num3 = BloonUtils.GetBloonIdNum(currentBloon);
-                
+
                 //so the bad doesn't turn to an invis bloon
                 if (num3 + num2 > allBloonTypes.Count - 2)
                 {
