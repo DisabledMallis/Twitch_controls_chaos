@@ -18,3 +18,9 @@ you will need to use this: https://github.com/Timotheeee/read_twitch_chat/tree/m
 and get a token from https://twitchapps.com/tmi/
 
 then press 0 once in game to activate twitch mode
+
+
+# For modders
+if you want to add an effect, create a pull request.
+
+
