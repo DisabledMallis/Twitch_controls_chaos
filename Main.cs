@@ -65,7 +65,7 @@ namespace twitchcontrols
             "change all tower targeting to last",
             "delete all bloons on screen",
             "all bloons are camgrow fortified for 60s",
-            "bloons randomly upgrade or take no dmg (30s)",
+            "bloons are randomly stronger (25s)",
             "reset lives",
             "new towers turn to cave monkeys (40s)",
             "new towers turn to cold sentries (40s)",
@@ -448,7 +448,7 @@ namespace twitchcontrols
             //}
             //if (key == "Alpha0")
             //{
-            //    options[0] = effects[19];
+            //    options[0] = effects[18];
             //}
 
         }
@@ -460,13 +460,14 @@ namespace twitchcontrols
             [HarmonyPrefix]
             public static bool Prefix(Bloon __instance, ref Model modelToUse)
             {
+                //Logger.Log(BloonUtils.GetBloonIdNum(modelToUse.name) + "");
                 //camgrow fortified
                 if (prevEffect == effects[17])
                 {
                     modelToUse = BloonUtils.SetBloonStatus(modelToUse.name, true, true, true);
                 }
                 //upgrade bloons randomly
-                if (prevEffect == effects[18] && voteTimer < 30)
+                if (prevEffect == effects[18] && voteTimer < 25 && BloonUtils.GetBloonIdNum(modelToUse.name) < 48)
                 {
                     modelToUse = GetNextBloon(modelToUse.name);
                 }
@@ -477,9 +478,10 @@ namespace twitchcontrols
             public static BloonModel GetNextBloon(string currentBloon)
             {
                 var allBloonTypes = BloonUtils.GetAllBloonTypes();
-                int num1 = random.Next(0, 4);
+                int num1 = random.Next(0, 5);
                 int num2 = num1 == 0 ? 0 : 1;
                 int num3 = BloonUtils.GetBloonIdNum(currentBloon);
+                
                 //so the bad doesn't turn to an invis bloon
                 if (num3 + num2 > allBloonTypes.Count - 2)
                 {
