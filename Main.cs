@@ -41,6 +41,7 @@ using Assets.Scripts.Models.Store;
 using Assets.Scripts.Models.Store.Loot;
 using Assets.Scripts.Unity.Gift;
 using System.Text.RegularExpressions;
+using Il2CppSystem;
 
 namespace twitchcontrols
 {
@@ -71,7 +72,9 @@ namespace twitchcontrols
             "new towers turn to cold sentries (40s)",
             "new towers turn to energising totems (20s)",
             "new towers turn to portable lakes (20s)",
-            "towers look at player"
+            "towers look at player",//24
+            "towers are 2D",
+            "towers are ants",
         };
         public static int prevChat = 0;
 
@@ -88,6 +91,43 @@ namespace twitchcontrols
         string[] chat = { "" };
 
         static bool twitchMode = false;
+
+        string[] canBeSold = new string[] {
+                                    "Dart",
+                                    "Boomerang",
+                                    "BombShooter",
+                                    "TackShooter",
+                                    "Ice",
+                                    "GlueGunner",
+                                    "Sniper",
+                                    "Sub",
+                                    "Buccaneer",
+                                    "Ace",
+                                    "HeliPilot",
+                                    "Wizard",
+                                    "Super",
+                                    "Ninja",
+                                    "Alchemist",
+                                    "Druid",
+                                    "SpikeFactory",
+                                    "MonkeyVillage",
+                                    "Engineer",
+                                    "Etienne",
+                                    "Quincy",
+                                    "Etienne",
+                                    "StrikerJones",
+                                    "ObynGreenfoot",
+                                    "Gwendolin",
+                                    "Adora",
+                                    "Benjamin",
+                                    "AdmiralBrickell",
+                                    "PatFusty",
+                                    "Ezili",
+                                    "PatFusty",
+                                    "CaveMonkey",
+                                    "EnergisingTotem",
+                                    "PortableLake",
+                                };
 
         public override void OnApplicationStart()
         {
@@ -215,50 +255,6 @@ namespace twitchcontrols
                         //sell random tower
                         if (prevEffect == effects[4])
                         {
-                            var towers = InGame.instance.bridge.GetAllTowers();
-                            if (towers.Count > 0)
-                                InGame.instance.SellTower(towers[random.Next(0, towers.Count)]);
-                        }
-                        //sell half of the towers
-                        if (prevEffect == effects[5])
-                        {
-                            //var a = TowerUtils.GetTower(TowerType.PortableLake);
-                            string[] valid = new string[] {
-                                    "Dart",
-                                    "Boomerang",
-                                    "BombShooter",
-                                    "TackShooter",
-                                    "Ice",
-                                    "GlueGunner",
-                                    "Sniper",
-                                    "Sub",
-                                    "Buccaneer",
-                                    "Ace",
-                                    "HeliPilot",
-                                    "Wizard",
-                                    "Super",
-                                    "Ninja",
-                                    "Alchemist",
-                                    "Druid",
-                                    "SpikeFactory",
-                                    "MonkeyVillage",
-                                    "Engineer",
-                                    "Etienne",
-                                    "Quincy",
-                                    "Etienne",
-                                    "StrikerJones",
-                                    "ObynGreenfoot",
-                                    "Gwendolin",
-                                    "Adora",
-                                    "Benjamin",
-                                    "AdmiralBrickell",
-                                    "PatFusty",
-                                    "Ezili",
-                                    "PatFusty",
-                                    "CaveMonkey",
-                                    "EnergisingTotem",
-                                    "PortableLake",
-                                };
                             int sold = 0;
                             var towers = InGame.instance.bridge.GetAllTowers();
                             foreach (var t in towers)
@@ -266,7 +262,27 @@ namespace twitchcontrols
                                 var name = Regex.Replace(t.tower.namedMonkeyKey, @"\d+", "");
                                 name = name.Replace("Monkey", "");
                                 Logger.Log(name);
-                                if (valid.Contains(name) && sold < towers.Count * 0.5)
+                                if (canBeSold.Contains(name) && sold < 1)
+                                {
+                                    InGame.instance.SellTower(t);
+                                    sold++;
+                                }
+
+                            }
+                        }
+                        //sell half of the towers
+                        if (prevEffect == effects[5])
+                        {
+                            //var a = TowerUtils.GetTower(TowerType.PortableLake);
+
+                            int sold = 0;
+                            var towers = InGame.instance.bridge.GetAllTowers();
+                            foreach (var t in towers)
+                            {
+                                var name = Regex.Replace(t.tower.namedMonkeyKey, @"\d+", "");
+                                name = name.Replace("Monkey", "");
+                                Logger.Log(name);
+                                if (canBeSold.Contains(name) && sold < towers.Count * 0.5)
                                 {
                                     InGame.instance.SellTower(t);
                                     sold++;
@@ -506,22 +522,24 @@ namespace twitchcontrols
             //{
             //    options[0] = effects[20];
             //}
-            //if (key == "Alpha6")
-            //{
-            //    options[0] = effects[21];
-            //}
-            //if (key == "Alpha7")
-            //{
-            //    options[0] = effects[22];
-            //}
-            //if (key == "Alpha8")
-            //{
-            //    options[0] = "Spawn DDT";
-            //}
-            //if (key == "Alpha9")
-            //{
-            //    options[0] = effects[24];
-            //}
+            if (key == "Alpha6")
+            {
+                options[0] = effects[25];
+            }
+            if (key == "Alpha7")
+            {
+                options[0] = effects[26];
+            }
+            if (key == "Alpha8")
+            {
+                options[0] = effects[27];
+            }
+            if (key == "Alpha9")
+            {
+                //InGame.instance.bridge.CreateTowerAt(new UnityEngine.Vector2(50, 50), TowerUtils.GetTower(TowerType.DartMonkey), 0, true, action);
+                //testRange = !testRange;
+                //Logger.Log("" + testRange);
+            }
             if (key == "Alpha0")
             {
                 twitchMode = true;
@@ -529,6 +547,8 @@ namespace twitchcontrols
             }
 
         }
+
+        
 
         [HarmonyPatch(typeof(Bloon), "Initialise")]
         public class BloonInitialise_Patch
@@ -594,6 +614,9 @@ namespace twitchcontrols
                 if (prevEffect == effects[23] && voteTimer < 20)
                     modelToUse = TowerUtils.GetTower(TowerType.PortableLake);
 
+                //if (prevEffect == effects[27] && voteTimer < 20)
+                //    modelToUse = TowerUtils.GetTower(TowerType.Etienne);
+
 
 
                 return true;
@@ -615,6 +638,19 @@ namespace twitchcontrols
                         var camera = InGame.instance.sceneCamera;
                         tts?.tower?.Node?.graphic?.transform.LookAt(camera.ScreenToWorldPoint(
                             new UnityEngine.Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2, camera.nearClipPlane)));
+                    }
+
+                if (prevEffect == effects[25] && voteTimer < 50)
+                    foreach (var tts in InGame.Bridge.GetAllTowers())
+                    {
+                        if (tts != null && tts.tower != null && tts.tower.Node != null && tts.tower.Node.graphic != null && tts.tower.Node.graphic.transform != null)
+                            tts.tower.Node.graphic.transform.localScale = new UnityEngine.Vector3(3, 2, 0.1f);
+                    }
+                if (prevEffect == effects[26] && voteTimer < 50)
+                    foreach (var tts in InGame.Bridge.GetAllTowers())
+                    {
+                        if (tts != null && tts.tower != null && tts.tower.Node != null && tts.tower.Node.graphic != null && tts.tower.Node.graphic.transform != null)
+                            tts.tower.Node.graphic.transform.localScale = new UnityEngine.Vector3(0.001f, 0.001f, 0.001f);
                     }
             }
         }
