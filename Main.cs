@@ -522,18 +522,18 @@ namespace twitchcontrols
             //{
             //    options[0] = effects[20];
             //}
-            if (key == "Alpha6")
-            {
-                options[0] = effects[25];
-            }
-            if (key == "Alpha7")
-            {
-                options[0] = effects[26];
-            }
-            if (key == "Alpha8")
-            {
-                options[0] = effects[27];
-            }
+            //if (key == "Alpha6")
+            //{
+            //    options[0] = effects[25];
+            //}
+            //if (key == "Alpha7")
+            //{
+            //    options[0] = effects[26];
+            //}
+            //if (key == "Alpha8")
+            //{
+            //    options[0] = effects[27];
+            //}
             if (key == "Alpha9")
             {
                 //InGame.instance.bridge.CreateTowerAt(new UnityEngine.Vector2(50, 50), TowerUtils.GetTower(TowerType.DartMonkey), 0, true, action);
