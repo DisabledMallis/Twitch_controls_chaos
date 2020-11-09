@@ -518,10 +518,10 @@ namespace twitchcontrols
             //{
             //    options[0] = "Spawn DDT";
             //}
-            if (key == "Alpha9")
-            {
-                options[0] = "Sell half of the towers";
-            }
+            //if (key == "Alpha9")
+            //{
+            //    options[0] = effects[24];
+            //}
             if (key == "Alpha0")
             {
                 twitchMode = true;
