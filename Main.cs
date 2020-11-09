@@ -82,7 +82,7 @@ namespace twitchcontrols
 
         public static float getChatTimer = 0;
         public static System.Random random = new System.Random();
-        static string chatFile = @"C:\Program Files (x86)\Steam\steamapps\common\BloonsTD6\twitchchat.txt";
+        static string chatFile = System.Environment.CurrentDirectory + @"\twitchchat.txt";
 
         string[] chat = { "" };
 
@@ -220,13 +220,42 @@ namespace twitchcontrols
                         //sell half of the towers
                         if (prevEffect == effects[5])
                         {
+                            string[] valid = new string[] {
+                                    "Dart",
+                                    "Boomerang",
+                                    "BombShooter",
+                                    "TackShooter",
+                                    "Ice",
+                                    "GlueGunner",
+                                    "Sniper",
+                                    "Sub",
+                                    "Buccaneer",
+                                    "Ace",
+                                    "HeliPilot",
+                                    "Wizard",
+                                    "Super",
+                                    "Ninja",
+                                    "Alchemist",
+                                    "Druid",
+                                    "SpikeFactory",
+                                    "MonkeyVillage",
+                                    "Engineer",
+                                };
+                            int sold = 0;
                             var towers = InGame.instance.bridge.GetAllTowers();
-                            if (towers.Count > 0)
-                                for (int i = 0; i < towers.Count * 0.5; i++)
+                            foreach (var t in towers)
+                            {
+                                var name = Regex.Replace(t.tower.namedMonkeyKey, @"\d+", "");
+                                name = name.Replace("Monkey", "");
+                                Logger.Log(name);
+                                if (valid.Contains(name) && sold < towers.Count * 0.5)
                                 {
-                                    var randomtower = towers[random.Next(0, towers.Count)];
-                                    InGame.instance.SellTower(randomtower);
+                                    InGame.instance.SellTower(t);
+                                    sold++;
                                 }
+
+                            }
+
                         }
                         //cash * 0.9
                         if (prevEffect == effects[6])
@@ -473,7 +502,7 @@ namespace twitchcontrols
             //}
             //if (key == "Alpha9")
             //{
-            //    options[0] = "Spawn BAD";
+            //    options[0] = "Sell half of the towers";
             //}
             if (key == "Alpha0")
             {
