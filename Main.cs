@@ -70,7 +70,8 @@ namespace twitchcontrols
             "new towers turn to cave monkeys (40s)",
             "new towers turn to cold sentries (40s)",
             "new towers turn to energising totems (20s)",
-            "new towers turn to portable lakes (20s)"
+            "new towers turn to portable lakes (20s)",
+            "towers look at player"
         };
         public static int prevChat = 0;
 
@@ -110,6 +111,7 @@ namespace twitchcontrols
             {
                 voteTimer += UnityEngine.Time.deltaTime;
                 getChatTimer += UnityEngine.Time.deltaTime;
+
             }
             else
             {
@@ -220,6 +222,7 @@ namespace twitchcontrols
                         //sell half of the towers
                         if (prevEffect == effects[5])
                         {
+                            //var a = TowerUtils.GetTower(TowerType.PortableLake);
                             string[] valid = new string[] {
                                     "Dart",
                                     "Boomerang",
@@ -240,6 +243,21 @@ namespace twitchcontrols
                                     "SpikeFactory",
                                     "MonkeyVillage",
                                     "Engineer",
+                                    "Etienne",
+                                    "Quincy",
+                                    "Etienne",
+                                    "StrikerJones",
+                                    "ObynGreenfoot",
+                                    "Gwendolin",
+                                    "Adora",
+                                    "Benjamin",
+                                    "AdmiralBrickell",
+                                    "PatFusty",
+                                    "Ezili",
+                                    "PatFusty",
+                                    "CaveMonkey",
+                                    "EnergisingTotem",
+                                    "PortableLake",
                                 };
                             int sold = 0;
                             var towers = InGame.instance.bridge.GetAllTowers();
@@ -500,10 +518,10 @@ namespace twitchcontrols
             //{
             //    options[0] = "Spawn DDT";
             //}
-            //if (key == "Alpha9")
-            //{
-            //    options[0] = "Sell half of the towers";
-            //}
+            if (key == "Alpha9")
+            {
+                options[0] = "Sell half of the towers";
+            }
             if (key == "Alpha0")
             {
                 twitchMode = true;
@@ -579,6 +597,25 @@ namespace twitchcontrols
 
 
                 return true;
+            }
+        }
+
+
+        //credit to Baydock
+        [HarmonyPatch(typeof(InGame), "Update")]
+        public class Update_Patch
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                if (InGame.Bridge == null) return;
+                if (prevEffect == effects[24] && voteTimer < 50)
+                    foreach (var tts in InGame.Bridge.GetAllTowers())
+                    {
+                        var camera = InGame.instance.sceneCamera;
+                        tts?.tower?.Node?.graphic?.transform.LookAt(camera.ScreenToWorldPoint(
+                            new UnityEngine.Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2, camera.nearClipPlane)));
+                    }
             }
         }
 
