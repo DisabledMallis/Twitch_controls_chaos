@@ -11,10 +11,11 @@ using Assets.Scripts.Unity.UI_New.Main;
 using NKHook6.Api.Events;
 using Assets.Scripts.Simulation.Bloons;
 using Assets.Scripts.Models.Towers;
-using NKHook6.Api.Utilities;
+
 using Assets.Scripts.Unity;
 
-using NKHook6.Api.Enums;
+
+
 
 using static NKHook6.Api.Events._Towers.TowerEvents;
 using Assets.Scripts.Simulation.Towers;
@@ -42,6 +43,24 @@ using Assets.Scripts.Models.Store.Loot;
 using Assets.Scripts.Unity.Gift;
 using System.Text.RegularExpressions;
 using Il2CppSystem;
+using System;
+using Assets.Scripts.Unity.Analytics;
+using Assets.Scripts.Simulation.Towers.Projectiles;
+using UnhollowerRuntimeLib;
+using Assets.Scripts.Simulation.Bloons;
+using Assets.Scripts.Unity;
+using Assets.Scripts.Unity.UI_New.InGame;
+using MelonLoader;
+using NKHook6.Api.Events;
+using NKHook6.Api.Events._Bloons;
+using NKHook6.Api.Events._MainMenu;
+using NKHook6.Api.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Assets.Scripts.Simulation.Towers.Projectiles.Behaviors;
 
 namespace twitchcontrols
 {
@@ -66,7 +85,7 @@ namespace twitchcontrols
             "change all tower targeting to last",
             "delete all bloons on screen",
             "all bloons are camgrow fortified for 60s",
-            "bloons are randomly stronger (25s)",
+            "bloons are randomly stronger (25s) (broken)",
             "reset lives",
             "new towers turn to cave monkeys (40s)",
             "new towers turn to cold sentries (40s)",
@@ -132,7 +151,8 @@ namespace twitchcontrols
         public override void OnApplicationStart()
         {
             base.OnApplicationStart();
-            EventRegistry.subscriber.register(this.GetType());
+            //EventRegistry.subscriber.register(this.GetType());
+            EventRegistry.instance.listen(typeof(Main));
             Logger.Log("twitchcontrols mod loaded");
             try
             {
@@ -518,28 +538,77 @@ namespace twitchcontrols
 
             string key = e.key + "";
 
-            //if (key == "Alpha5")
+
+            //if (key == "Alpha3")
             //{
-            //    options[0] = effects[20];
+            //    options[0] = effects[18];//upgrade
             //}
             //if (key == "Alpha6")
             //{
-            //    options[0] = effects[25];
+            //    getChatTimer = -9999;
             //}
             //if (key == "Alpha7")
             //{
-            //    options[0] = effects[26];
+            //    foreach (var p in InGame.instance.getProjectiles())
+            //    {
+            //        if (p.projectileBehaviors != null)
+            //        {
+            //            Logger.Log(p.projectileBehaviors.count+"");
+            //            var eor = new EndOfRoundClearBypass();
+            //            p.projectileBehaviors.Add(eor);
+            //            Logger.Log(p.projectileBehaviors.count + "");
+            //        }
+            //        else
+            //        {
+            //            Logger.Log("null");
+            //        }
+
+            //    }
             //}
             //if (key == "Alpha8")
             //{
-            //    options[0] = effects[27];
+            //    foreach (var p in InGame.instance.getProjectiles())
+            //    {
+            //        if (p.ageBehavior != null)
+            //        {
+            //            Logger.Log(p.model.name);
+            //            p.ageBehavior.OnRoundPassed();
+
+            //        }
+            //        else
+            //        {
+            //            Logger.Log("null");
+            //        }
+
+            //    }
             //}
-            if (key == "Alpha9")
-            {
-                //InGame.instance.bridge.CreateTowerAt(new UnityEngine.Vector2(50, 50), TowerUtils.GetTower(TowerType.DartMonkey), 0, true, action);
-                //testRange = !testRange;
-                //Logger.Log("" + testRange);
-            }
+            //if (key == "Alpha9")
+            //{
+            //    foreach (var p in InGame.instance.getProjectiles())
+            //    {
+            //        if (p.ageBehavior != null)
+            //        {
+            //            Logger.Log(p.model.name);
+            //            p.ageBehavior.roundsLeft = 999;
+            //            p.ageBehavior.ResetAge();
+                        
+            //        } else
+            //        {
+            //            Logger.Log("null");
+            //        }
+
+            //    }
+
+            //    //var action = (Il2CppSystem.Action<bool>)delegate (bool s)
+            //    //{
+            //    //    Logger.Log(s + "");
+            //    //};
+
+            //    //InGame.instance.bridge.CreateTowerAt(new UnityEngine.Vector2(50, 50), TowerUtils.GetTower(TowerType.DartMonkey), 0, true, action);
+            //    //testRange = !testRange;
+            //    //Logger.Log("" + testRange);
+
+            //}
             if (key == "Alpha0")
             {
                 twitchMode = true;
@@ -548,51 +617,9 @@ namespace twitchcontrols
 
         }
 
-        
-
-        [HarmonyPatch(typeof(Bloon), "Initialise")]
-        public class BloonInitialise_Patch
-        {
-
-            [HarmonyPrefix]
-            public static bool Prefix(Bloon __instance, ref Model modelToUse)
-            {
-                //Logger.Log(BloonUtils.GetBloonIdNum(modelToUse.name) + "");
-                //camgrow fortified
-                if (prevEffect == effects[17])
-                {
-                    modelToUse = BloonUtils.SetBloonStatus(modelToUse.name, true, true, true);
-                }
-                //upgrade bloons randomly
-                if (prevEffect == effects[18] && voteTimer < 25 && BloonUtils.GetBloonIdNum(modelToUse.name) < 48)
-                {
-                    modelToUse = GetNextBloon(modelToUse.name);
-                }
-
-                return true;
-            }
-
-            public static BloonModel GetNextBloon(string currentBloon)
-            {
-                var allBloonTypes = BloonUtils.GetAllBloonTypes();
-                int num1 = random.Next(0, 5);
-                int num2 = num1 == 0 ? 0 : 1;
-                int num3 = BloonUtils.GetBloonIdNum(currentBloon);
-
-                //so the bad doesn't turn to an invis bloon
-                if (num3 + num2 > allBloonTypes.Count - 2)
-                {
-                    num3 = allBloonTypes.Count - 2;
-                }
-                else
-                {
-                    num3 += num2;
-                }
-                return BloonUtils.GetNextStrongestBloon(allBloonTypes[num3], false, false, false, true);
-            }
 
 
-        }
+
 
         [HarmonyPatch(typeof(Tower), "Initialise")]
         public class TowerInitialise_Patch
@@ -603,16 +630,16 @@ namespace twitchcontrols
             {
 
                 if (prevEffect == effects[20] && voteTimer < 40)
-                    modelToUse = TowerUtils.GetTower(TowerType.CaveMonkey);
+                    modelToUse = Game.instance.getTowerModel(TowerType.CaveMonkey);//TowerUtils.GetTower(TowerType.CaveMonkey);
 
                 if (prevEffect == effects[21] && voteTimer < 40)
-                    modelToUse = TowerUtils.GetTower(TowerType.SentryCold);
+                    modelToUse = Game.instance.getTowerModel(TowerType.SentryCold);
 
                 if (prevEffect == effects[22] && voteTimer < 20)
-                    modelToUse = TowerUtils.GetTower(TowerType.EnergisingTotem);
+                    modelToUse = Game.instance.getTowerModel(TowerType.EnergisingTotem);
 
                 if (prevEffect == effects[23] && voteTimer < 20)
-                    modelToUse = TowerUtils.GetTower(TowerType.PortableLake);
+                    modelToUse = Game.instance.getTowerModel(TowerType.PortableLake);
 
                 //if (prevEffect == effects[27] && voteTimer < 20)
                 //    modelToUse = TowerUtils.GetTower(TowerType.Etienne);
@@ -654,6 +681,68 @@ namespace twitchcontrols
                     }
             }
         }
+
+
+
+        [HarmonyPatch(typeof(Bloon), "Initialise")]
+        public class BloonInitialise_Patch
+        {
+
+            [HarmonyPrefix]
+            public static bool Prefix(Bloon __instance, ref Model modelToUse)
+            {
+                //Logger.Log(BloonUtils.GetBloonIdNum(modelToUse.name) + "");
+                //camgrow fortified
+                if (prevEffect == effects[17])
+                {
+                    try
+                    {
+                        modelToUse = BloonUtils.SetBloonStatus(modelToUse.name, true, true, true);
+                    } catch
+                    {
+
+                    }
+                    
+                }
+                //upgrade bloons randomly
+                if (prevEffect == effects[18] && voteTimer < 25 && BloonUtils.GetBloonIdNum(modelToUse.name) < 48)
+                {
+                    try
+                    {
+                        modelToUse = GetNextBloon(modelToUse.name);
+                    }
+                    catch
+                    {
+
+                    }
+                    
+                }
+
+                return true;
+            }
+
+            public static BloonModel GetNextBloon(string currentBloon)
+            {
+                var allBloonTypes = BloonUtils.GetAllBloonTypes();
+                int num1 = random.Next(0, 5);
+                int num2 = num1 == 0 ? 0 : 1;
+                int num3 = BloonUtils.GetBloonIdNum(currentBloon);
+
+                //so the bad doesn't turn to an invis bloon
+                if (num3 + num2 > allBloonTypes.Count - 2)
+                {
+                    num3 = allBloonTypes.Count - 2;
+                }
+                else
+                {
+                    num3 += num2;
+                }
+                return BloonUtils.GetNextStrongestBloon(allBloonTypes[num3], false, false, false, true);
+            }
+
+
+        }
+
 
     }
 
