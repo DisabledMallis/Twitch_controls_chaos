@@ -2,7 +2,7 @@
 
 to install the mod: 
 download these files:
-https://github.com/TDToolbox/NKHook6/releases/download/2.1.0/NKHook6.dll
+https://github.com/TDToolbox/NKHook6/releases/download/24/NKHook6.dll
 https://github.com/HerpDerpinstine/MelonLoader/releases/download/v0.2.7.2/MelonLoader.Installer.exe
 
 install melonloader
